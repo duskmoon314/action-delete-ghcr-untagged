@@ -31,6 +31,7 @@ const list_versions = async (
           package_name,
           package_type: 'container'
         })
+      core.debug(JSON.stringify(res))
       return (res as PackageVersion[]).filter(
         v =>
           v.metadata.container.tags.length === 0 &&
@@ -68,6 +69,7 @@ const delete_versions = async (
   try {
     await Promise.all(
       versions.map(async v => {
+        core.debug(`Deleting version ${v.id}...`)
         if (owner.username) {
           await octokit.rest.packages.deletePackageVersionForUser({
             username: owner.username,
@@ -85,6 +87,7 @@ const delete_versions = async (
         } else {
           Promise.reject(new Error("Must provide either 'username' or 'org'"))
         }
+        core.debug(`Deleted version ${v.id}`)
       })
     )
   } catch (error) {
