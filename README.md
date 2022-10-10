@@ -1,3 +1,5 @@
+[![build-test](https://github.com/duskmoon314/action-delete-ghcr-untagged/actions/workflows/test.yml/badge.svg)](https://github.com/duskmoon314/action-delete-ghcr-untagged/actions/workflows/test.yml)
+
 # Action Delete GHCR Untagged
 
 This action deletes all untagged versions that have exceeded the expiration date from GitHub Container Registry.
@@ -28,3 +30,5 @@ steps:
       # Default: `30` (days)
       expiration: 30
 ```
+
+You can find a real-world example in [duskmoon314/LoD-frontend](https://github.com/duskmoon314/LoD-frontend/blob/main/.github/workflows/docker.yaml#L45-L53)
