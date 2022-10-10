@@ -1,11 +1,30 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'delete-ghcr-untagged'
+description: 'Delete untagged version of a package in GitHub Container Registry'
+author: 'duskmoon314'
 inputs:
-  milliseconds: # change this
+  token:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: |
+      Personal access token with `delete:packages` scope.
+  owner_type:
+    required: true
+    description: |
+      Owner type of the package. Can be `user` or `org`.
+    default: 'user'
+  owner:
+    required: true
+    description: |
+      Owner of the package. Can be a username or an organization name.
+    default: ${{ github.repository_owner }}
+  package_name:
+    required: true
+    description: |
+      Name of the package.
+  expiration:
+    required: false
+    description: |
+      Expiration time of the package. Can be a number of days.
+    default: 30
 runs:
   using: 'node16'
   main: 'dist/index.js'
