@@ -31,10 +31,11 @@ const list_versions = async (
           package_name,
           package_type: 'container'
         })
-      return (res as PackageVersion[]).filter(v => {
-        v.metadata.container.tags.length === 0 &&
+      return (res as PackageVersion[]).filter(
+        v =>
+          v.metadata.container.tags.length === 0 &&
           dayjs(v.updated_at) < now.subtract(expiration, 'day')
-      })
+      )
     } else if (owner.org) {
       const {data: res} =
         await octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
