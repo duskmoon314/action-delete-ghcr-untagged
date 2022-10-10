@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 
 const octokit = new Octokit({
   auth: core.getInput('token'),
-  userAgent: process.env.npm_package_name
+  userAgent: 'action-delete-ghcr-untagged'
 })
 
 interface PackageVersion {
