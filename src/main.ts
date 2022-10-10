@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import {Octokit} from '@octokit/rest'
-import {Dayjs} from 'dayjs'
+import dayjs from 'dayjs'
 
 const octokit = new Octokit({
   auth: core.getInput('token'),
@@ -23,7 +23,7 @@ const list_versions = async (
   owner: {username?: string; org?: string}
 ): Promise<PackageVersion[]> => {
   try {
-    const now = new Dayjs()
+    const now = dayjs()
     if (owner.username) {
       const {data: res} =
         await octokit.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
@@ -33,7 +33,7 @@ const list_versions = async (
         })
       return (res as PackageVersion[]).filter(v => {
         v.metadata.container.tags.length === 0 &&
-          new Dayjs(v.updated_at) < now.subtract(expiration, 'day')
+          dayjs(v.updated_at) < now.subtract(expiration, 'day')
       })
     } else if (owner.org) {
       const {data: res} =
@@ -44,7 +44,7 @@ const list_versions = async (
         })
       return (res as PackageVersion[]).filter(v => {
         v.metadata.container.tags.length === 0 &&
-          new Dayjs(v.updated_at) < now.subtract(expiration, 'day')
+          dayjs(v.updated_at) < now.subtract(expiration, 'day')
       })
     } else {
       return Promise.reject(
@@ -52,6 +52,7 @@ const list_versions = async (
       )
     }
   } catch (error) {
+    core.error(JSON.stringify(error))
     return Promise.reject(error)
   }
 }
@@ -94,6 +95,8 @@ async function run(): Promise<void> {
     const owner = core.getInput('owner')
     const package_name = core.getInput('package_name')
     const expiration = parseInt(core.getInput('expiration'))
+
+    core.info(`Deleting old versions of ${owner}/${package_name}...`)
 
     const versions = await list_versions(package_name, expiration, {
       username: owner_type === 'user' ? owner : undefined,
