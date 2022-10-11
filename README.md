@@ -32,3 +32,11 @@ steps:
 ```
 
 You can find a real-world example in [duskmoon314/LoD-frontend](https://github.com/duskmoon314/LoD-frontend/blob/main/.github/workflows/docker.yaml#L45-L53)
+
+## Known Limitations
+
+GitHub's API has a rate limit and I currently use a very simple `Promise.all(versions.map()`)` to aggressively delete all untagged versions. If you have a lot of untagged versions, the action will fail with the following error:
+
+```text
+Error: You have exceeded a secondary rate limit. Please wait a few minutes before you try again.
+```
