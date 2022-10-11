@@ -25,12 +25,14 @@ const list_versions = async (
   try {
     const now = dayjs()
     if (owner.username) {
-      const {data: res} =
-        await octokit.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
+      const res = await octokit.paginate(
+        octokit.rest.packages.getAllPackageVersionsForPackageOwnedByUser,
+        {
           username: owner.username,
           package_name,
           package_type: 'container'
-        })
+        }
+      )
       core.debug(JSON.stringify(res))
       return (res as PackageVersion[]).filter(
         v =>
@@ -38,12 +40,14 @@ const list_versions = async (
           dayjs(v.updated_at) < now.subtract(expiration, 'day')
       )
     } else if (owner.org) {
-      const {data: res} =
-        await octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+      const res = await octokit.paginate(
+        octokit.rest.packages.getAllPackageVersionsForPackageOwnedByOrg,
+        {
           org: owner.org,
           package_name,
           package_type: 'container'
-        })
+        }
+      )
       core.debug(JSON.stringify(res))
       return (res as PackageVersion[]).filter(
         v =>
